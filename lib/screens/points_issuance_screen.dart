@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinirewards_merchant/config/theme.dart';
 import 'package:infinirewards_merchant/providers/starknet.dart';
 import 'package:starknet/starknet.dart';
@@ -91,7 +92,7 @@ class _PointsIssuanceScreenState extends ConsumerState<PointsIssuanceScreen> {
       appBar: AppBar(
         title: const Text('Issue Points'),
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -99,67 +100,41 @@ class _PointsIssuanceScreenState extends ConsumerState<PointsIssuanceScreen> {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: FormBuilder(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      FormBuilderTextField(
-                        name: 'phoneNumber',
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
-                          prefixIcon: Icon(Icons.phone),
-                        ),
-                        keyboardType: TextInputType.phone,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                          FormBuilderValidators.minLength(8),
-                          FormBuilderValidators.maxLength(15),
-                        ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'Select Issuance Method',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 16),
-                      FormBuilderTextField(
-                        name: 'points',
-                        decoration: const InputDecoration(
-                          labelText: 'Points',
-                          prefixIcon: Icon(Icons.stars),
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                          FormBuilderValidators.min(1),
-                        ]),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.push('/points-issuance/phone');
+                      },
+                      icon: const Icon(Icons.phone),
+                      label: const Text('Issue to Phone Number'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.secondaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : _handleSubmit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.secondaryColor,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Text(
-                                  'Issue Points',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                        ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.push('/points-issuance/address');
+                      },
+                      icon: const Icon(Icons.account_balance_wallet),
+                      label: const Text('Issue to StarkNet Address'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.cardColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
